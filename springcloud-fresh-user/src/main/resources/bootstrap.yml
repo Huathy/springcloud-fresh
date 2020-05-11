@@ -1,0 +1,27 @@
+spring:
+   profiles:
+      active: dev-7777
+      
+---
+spring:
+   profiles: dev-7777
+   application:
+      name: fresh-user
+   cloud:
+      config:
+         uri: 127.0.0.1:5566/
+         label: master
+         name: springcloud-fresh-user   #文件的前缀名称
+         profile: dev   # {name}-{profile}.yml
+         
+management:
+   endpoint:
+      shutdown:
+         enabled: false
+   endpoints:
+      refresh:
+         enabled: true
+      web:
+         exposure:
+            include: refresh
+      
