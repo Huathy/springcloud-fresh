@@ -3,10 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.hx</groupId>
-	<artifactId>springcloud-fresh-config-server</artifactId>
+	<artifactId>springcloud-fresh-eureka-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>springcloud-fresh-config-server</name>
 	
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -23,20 +22,18 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		
-		<!-- spring cloud config 服务端包 -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-config-server</artifactId>
-		</dependency>
-		
-		<!-- eureka服务注册依赖 -->
-		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 	</dependencies>
 	
@@ -53,13 +50,13 @@
 	</dependencyManagement>
 	
 	<build>
-		<finalName>springcloud-fresh-config-server</finalName>
+		<finalName>springcloud-fresh-eureka-server</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.hx.fresh.config.server.ConfigServerApp</mainClass>
+					<mainClass>com.hx.fresh.eureka.server.EurekaServerApp</mainClass>
 				</configuration>
 				<executions>
 					<execution>

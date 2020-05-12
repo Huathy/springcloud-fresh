@@ -1,0 +1,52 @@
+spring:
+   profiles:
+      active: dev-6868
+
+---
+server: 
+   port: 6868
+
+spring:
+   profiles: dev-6868
+   application:
+      name: eureka-server
+   security:
+      user: 
+         name: huathy
+         password: 123456
+   
+eureka:
+   instance:
+      hostname: localhost
+   client:
+      register-with-eureka: false   #如果需要注册到集群服务中需要改为true
+      fetch-registry: false
+      serviceUrl:
+         defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@${eureka.instance.hostname}:${server.port}/eureka/
+   server:
+      enable-self-preservation: false   #关闭自我保护（当服务器小于一定数量时，若有服务器宕机，不会被移除）
+      
+
+---
+server: 
+   port: 6869
+
+spring:
+   profiles: dev-6869
+   application:
+      name: eureka-server
+   security:
+      user: 
+         name: huathy
+         password: 123456
+   
+eureka:
+   instance:
+      hostname: localhost
+   client:
+      register-with-eureka: false   #如果需要注册到集群服务中需要改为true
+      fetch-registry: false
+      serviceUrl:
+         defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@${eureka.instance.hostname}:${server.port}/eureka/
+   server:
+      enable-self-preservation: false   #关闭自我保护（当服务器小于一定数量时，若有服务器宕机，不会被移除）

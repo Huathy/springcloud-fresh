@@ -6,8 +6,6 @@
 	<artifactId>springcloud-fresh-user</artifactId>
 	<packaging>jar</packaging>
 
-	<name>springcloud-fresh-user</name>
-
 	<parent>
 		<groupId>com.hx</groupId>
 		<artifactId>springcloud-fresh-pom</artifactId>

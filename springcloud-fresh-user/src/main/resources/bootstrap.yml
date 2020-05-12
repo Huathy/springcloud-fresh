@@ -2,18 +2,26 @@ spring:
    profiles:
       active: dev-7777
       
+      
 ---
+server:
+   port: 7777
+      
 spring:
    profiles: dev-7777
    application:
       name: fresh-user
    cloud:
       config:
-         uri: 127.0.0.1:5566/
-         label: master
-         name: springcloud-fresh-user   #文件的前缀名称
+         uri: http://127.0.0.1:5566/   #从配置服务器中读取配置文件
+         label: master   #从主分支中读取
+         name: springcloud-fresh-user   #文件的前缀名称（项目名与文件名可不同）
          profile: dev   # {name}-{profile}.yml
+         #descovery:   
+         #   enabled: true   #开启配置发现
+         #   serviceId: fresh-config-server   #配置中心服务器名称
          
+# actuator监控，感应配置中心服务端变化
 management:
    endpoint:
       shutdown:
@@ -21,7 +29,3 @@ management:
    endpoints:
       refresh:
          enabled: true
-      web:
-         exposure:
-            include: refresh
-      
