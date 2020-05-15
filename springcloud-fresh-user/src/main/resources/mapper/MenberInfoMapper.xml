@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hx.fresh.user.mapper.IMenberInfoMapper">
+	<update id="reSetMno" parameterType="int">
+		UPDATE menberinfo SET pwd=md5(RIGHT(tel,6)) WHERE mno=#{_parameter}
+	</update>
+	
+	<select id="regCount" parameterType="map" resultType="MenberInfo">
+		SELECT nickName,tel,email FROM menberinfo WHERE nickName=#{nickName} OR tel=#{tel} OR email=#{email}
+	</select>
+	<insert id="reg" parameterType="map">
+		insert into menberinfo values(0,#{nickname},'',md5(#{pwd}),#{tel},#{email},'',#{regDate},1)
+	</insert>
+	
+	<select id="login" parameterType="map" resultType="MenberInfo">
+		SELECT mno,nickname,photo FROM menberinfo WHERE `status`=1 AND nickName=#{nickname} AND pwd=md5(#{pwd})
+	</select>
+	
+	<select id="findAllByPage" parameterType="Integer" resultType="MenberInfo">
+		SELECT mno,nickName,realName,tel,email,regDate,status FROM menberinfo LIMIT #{page},#{pageSize}
+	</select>
+
+	<select id="countAll" resultType="int">
+		SELECT COUNT(mno) FROM menberinfo
+	</select>
+	
+	<update id="delByMno" parameterType="int">
+		DELETE FROM menberinfo WHERE mno=#{_parameter}
+	</update>
+	
+	<select id="getInfoByMno" resultType="MenberInfo" parameterType="Integer">
+		SELECT mno,nickName,realName,tel,email,photo,regDate FROM menberinfo WHERE mno=#{_parameter} AND status=1
+	</select>
+	
+	<update id="modifyByMno" parameterType="MenberInfo">
+		UPDATE menberinfo SET nickName=#{nickName},realName=#{realName},email=#{email},tel=#{tel} WHERE mno=#{mno}
+	</update>
+</mapper>

@@ -1,0 +1,38 @@
+server: 
+   port: 9999
+
+spring:
+   application:
+      name: fresh-zuul
+   
+eureka:
+   client:
+      serviceUrl:
+         defaultZone: http://huathy:123456@127.0.0.1:6868/eureka
+         
+zuul:
+   max:
+      host:
+         connections: 500
+   host:
+      maxTotalConnections: 200   #最大链接数，默认200
+      maxPerRouteConnections: 20   #每个路由的最大链接数，默认20
+      socket-timeout-millis: 60000
+      connect-timeout-millis: 60000
+   routes:
+      #标识服务器的名字，可以自定义，但一般为了方便采用服务器名字
+      service-rcp-user:
+         #服务器映射路径，目的是为了不暴露真实的IP地址 
+         path: /user/**
+         serviceId: fresh-user   #注册到Eureka Server中的服务器名称
+         sensitiveHeaders: "*" 
+      
+      service-rcp-order:
+         path: /order/**
+         serviceId: fresh-order
+         sensitiveHeaders: "*" 
+
+      service-rcp-goods:
+         path: /view/**
+         serviceId: fresh-goods
+         sensitiveHeaders: "*" 
