@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.hx.fresh.goods.mapper.IGoodsInfoMapper">
+<mapper namespace="com.hx.fresh.mapper.IGoodsInfoMapper">
 	<select id="finds" resultType="GoodsInfo">
 		select gno,gname,price,pics,tno from goodsInfo gf1 where 4 > 
 			(select count(gno) from goodsInfo gf2 where gf1.tno=gf2.tno and gf1.gno &lt; gf2.gno) order by gf1.tno asc, gf1.gno desc

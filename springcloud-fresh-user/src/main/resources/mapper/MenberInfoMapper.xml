@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hx.fresh.user.mapper.IMenberInfoMapper">
+<mapper namespace="com.hx.fresh.mapper.IMenberInfoMapper">
 	<update id="reSetMno" parameterType="int">
 		UPDATE menberinfo SET pwd=md5(RIGHT(tel,6)) WHERE mno=#{_parameter}
 	</update>

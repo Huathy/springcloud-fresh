@@ -25,6 +25,7 @@ zuul:
          #服务器映射路径，目的是为了不暴露真实的IP地址 
          path: /user/**
          serviceId: fresh-user   #注册到Eureka Server中的服务器名称
+         #由于zuul服务器在转发时会过滤一些头部信息，故此处需要配置为不过滤
          sensitiveHeaders: "*" 
       
       service-rcp-order:

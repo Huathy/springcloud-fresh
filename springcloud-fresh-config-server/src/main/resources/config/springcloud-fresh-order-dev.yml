@@ -41,7 +41,7 @@ spring:
 mybatis:
    mapper-locations: mapper/*Mapper.xml
    #启用别名类所在的包
-   type-aliases-package: com.hx.fresh.order.entity
+   type-aliases-package: com.hx.fresh.entity
    
 eureka:
    client:
