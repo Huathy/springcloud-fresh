@@ -1,6 +1,4 @@
 //滑动解锁插件
-
-
  (function($) {
     function Slider(elem, options) {
         this.$container = elem;

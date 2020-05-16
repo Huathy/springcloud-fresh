@@ -132,9 +132,7 @@
 .reg_form li .error_tip,#errmsg{
 	height:30px;
 	line-height:30px;
-	margin-left:80px;
 	color:#E62E2E;	
-	display:none;/*超出部分隐藏*/
 }
 .reg_form li .yzm_tip{
 	float:left;
@@ -146,7 +144,6 @@
 	position:relative;
 	left:10px;
 	top:5px;
-	display:none;
 }
 #errmsg{
 	margin-left:85px;

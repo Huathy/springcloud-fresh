@@ -13,6 +13,7 @@
 <script src="js/vue.min.js"></script>
 <script src="js/axios.js"></script>
 <script src="js/qs.js"></script>
+<script src="js/register.js"></script>
 </head>
 
 <body>
@@ -33,36 +34,48 @@
 				<div class="reg_form clearfix">
 					<form>
 						<ul>
-							<li><label for="nickname">用户名:</label> <input type="text"
-								v-model="nickName" id="nickname" name="nickname"
-								placeholder="请输入您的用户名" required> <span class="error_tip">提示信息</span></li>
-							<li><label for="pwd">密码:</label> <input type="password"
-								v-model="pwd" id="pwd" name="pwd"
-								placeholder="请输入6~15位字母、数字还可包含特殊字符"> <span
-								class="error_tip">提示信息</span></li>
-							<li><label for="cpwd">确认密码:</label> <input type="password"
-								id="cpwd" name="cpwd" placeholder="请输入确认密码"> <span
-								class="error_tip">提示信息</span></li>
-							<li><label for="tel">电话号码:</label> <input type="text"
-								id="tel" name="tel" placeholder="请输入以1开头的11位有效电话号码"> <input
-								@click="reg" type="button" id="getCode1" name="" value="获取验证码">
-								<span class="error_tip yzm_tip">提示信息</span></li>
-							<li><label for="yzm">验证码:</label> <input type="text"
-								id="yzm" name="yzm" placeholder="请输入验证码"> <span
-								class="error_tip">提示信息</span></li>
-							<li><label for="email">邮箱:</label> <input type="text"
-								v-model="email" id="email" name="email" placeholder="请输入有效的邮箱地址">
-								<span class="error_tip">提示信息</span></li>
+							<li>
+								<label for="nickname">用户名:</label>
+								<input type="text" v-model="nickName" id="nickname" @blur="checkAccount" placeholder="请输入您的用户名" required>
+								<span class="error_tip"><span v-if="status[0]">用户名格式错误...</span></span>
+							</li>
+							<li>
+								<label for="pwd">密码:</label>
+								<input type="password" v-model="pwd" id="pwd" v-model="pwd" @blur="checkPwd" placeholder="请输入6~15位字母、数字还可包含特殊字符">
+								<span class="error_tip"><span v-if="status[1]">密码格式错误...</span></span>
+							</li>
+							<li>
+								<label for="cpwd">确认密码:</label>
+								<input type="password" id="cpwd" v-model="cpwd" @blur="checkCpwd" placeholder="请输入确认密码">
+								<span class="error_tip"><span v-if="status[2]">两次密码不一致...</span></span>
+							</li>
+							<li>
+								<label for="email">邮箱:</label>
+								<input type="text" v-model="email" id="tel" @blur="checkEmail" placeholder="请输入有效的邮箱地址">
+								<input @click="sendCode" type="button" id="getCode" name="" value="获取验证码">
+								<span class="error_tip yzm_tip"><span v-if="status[3]">{{tipEmail}}</span></span>
+							</li>
+							<li>
+								<label for="yzm">验证码:</label>
+								<input type="text" id="yzm" v-model="yzm" @blur="checkYzm" placeholder="请输入验证码">
+								<span class="error_tip"><span v-if="status[4]">{{tip_yzm}}</span></span>
+							</li>
+							<li>
+								<label for="tel">电话号码:</label>
+								<input type="text" id="email" v-model="tel" @blur="checkTel" placeholder="请输入以1开头的11位有效电话号码">
+								<span class="error_tip"><span v-if="status[5]">手机号码格式错误...</span></span>
+							</li>
 							<li class="row">
 								<!-- 滑块验证-->
 								<div class="bar"></div>
 							</li>
-							<li class="agreement"><input type="checkbox" id="allow"
-								name="allow" checked> <label for="allow">同意<a
-									href="#">"天天生鲜用户使用协议"</a></label> <span class="error_tip2">提示信息2</span>
+							<li class="agreement">
+								<input type="checkbox" id="allow" name="allow" checked>
+								<label for="allow">同意<a href="#">"天天生鲜用户使用协议"</a></label>
+								<span class="error_tip2"><span v-if="checkbl">{{tip_info}}</span></span>
 							</li>
-							<li><input type="button" id="reg" name=""
-								onClick="checkRegister()" value="注 册"> <span id="errmsg">提示信息3</span>
+							<li>
+								<input type="button" id="reg" name="" @click="reg" value="注 册">
 							</li>
 						</ul>
 					</form>
@@ -79,24 +92,117 @@
 		<p>CopyRight &copy; 2019 衡阳市源辰信息科技有限公司 All Rights Reserverd</p>
 		<p>电话：0734-8355998 湘ICP备16015987号</p>
 	</div>
-	<script src="js/register.js"></script>
+	
 	<script>
-    	$('.bar').slideToUnlock({ });
-    	let vm = new Vue({
-    		el : "#app",
-    		data : {
-    			nickName : 'huathy',
-    			email : '1416102787@qq.com'
-    		},
-    		methods : {
-    			reg : function(){
+		$('.bar').slideToUnlock({});
+		let vm = new Vue({
+			el : "#app",
+			data : {
+				nickName : 'huathy',
+				pwd: '123456',
+				cpwd: '123456',
+				yzm: '000000',
+				tel: '13574466475',
+				email : '1416102787@qq.com',
+				tipEmail: '请输入您的注册邮箱...',
+				tip_yzm: '请输入获取的验证码...',
+				tip_info: '',
+				checkbl: false,
+				status: [true,true,true,true,true,true]
+			},
+			methods : {
+				checkAccount: function(){
+					let reg = /^[\u4e00-\u9fff\w]/;
+					if( !reg.test(this.nickName) ){
+						Vue.set(vm.status,0,true);
+					}else{
+						Vue.set(vm.status,0,false);
+					}
+				},
+				checkPwd: function(){
+					let reg = /^[\w~!@#$%&*]{6,15}$/;
+					if( !reg.test(this.pwd) ){
+						Vue.set(vm.status,1,true);
+					}else{
+						Vue.set(vm.status,1,false);
+					}
+				},
+				checkCpwd: function(){
+					if( this.pwd != this.cpwd ){
+						Vue.set(vm.status,2,true);
+					}else{
+						Vue.set(vm.status,2,false);
+					}
+				},
+				checkYzm: function(){
+					let reg = /^\d{6}$/;
+					if( !reg.test(this.yzm) ){
+						Vue.set(vm.status,4,true);
+					}else{
+						Vue.set(vm.status,4,false);
+					}
+				},
+				checkEmail: function(){
+					let reg = /^\w+((-w)|(\.\w))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+					if( !reg.test(this.email) ){
+						Vue.set(vm.status,3,true);
+					}else{
+						Vue.set(vm.status,3,false);
+					}
+				},
+				checkTel: function(){
+					let reg = /^1(3|4|5|6|7|8|9)\d{9}$/;
+					if( !reg.test(this.tel) ){
+						Vue.set(vm.status,5,true);
+					}else{
+						Vue.set(vm.status,5,false);
+					}
+				},
+				sendCode: function(){
+					if(this.status[3]){
+						return ;
+					}
+					$("#getCode").attr("disabled","true");	//不可重复点击
 					axios.post("menber/code",qs.stringify({receive:this.email,name : this.nickName})).then(result => {
 						if(result.data.code == 200){
-							alert("邮件发送成功！");
+							var time = 180;
+							var timetask = setInterval(function(){
+								if(time > 0){
+									time --;
+									$("#getCode").val(time + "s");
+								}else{
+									$("#getCode").removeAttr("disabled").val("重新获取");
+									clearInterval(timetask);
+								}
+							},1000);
 						}else if(result.data.code == 500){
 							alert("邮件发送失败！");
 						}
 					});
+				},
+				reg : function(){
+					console.log($.inArray(true,this.status));
+					if($.inArray(true,this.status) >= 0){
+						this.checkbl = true;
+						this.tip_info = "您输入的信息有误，请检查后重试...";
+						return ;
+					}
+					this.checkbl = false;
+					axios.post("menber/reg",qs.stringify({nickname:this.nickName,pwd:this.pwd,yzm:this.yzm,tel:this.tel,email:this.email})).then(res => {
+						if(res.data == -2){
+							this.checkbl = true;
+							this.tip_info = "验证码过期...";
+						}else if(res.data == -3){
+							this.checkbl = true;
+							this.tip_info = "验证码错误...";
+						}else if(res.data > 0){
+							this.checkbl = false;
+							location.href = "login.html";
+						}else{
+							this.checkbl = true;
+							this.tip_info = "注册失败，请稍后重试...";
+						}
+					})
 				}
     		}
     	});

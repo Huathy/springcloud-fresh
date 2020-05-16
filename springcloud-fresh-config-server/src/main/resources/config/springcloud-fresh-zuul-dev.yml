@@ -36,4 +36,8 @@ zuul:
       service-rcp-goods:
          path: /view/**
          serviceId: fresh-goods
-         sensitiveHeaders: "*" 
+         sensitiveHeaders: "*"
+         
+ribbon:
+   ReadTimeout: 10000   #小于zuul的超时时间
+   ConnectTimeout: 10000
