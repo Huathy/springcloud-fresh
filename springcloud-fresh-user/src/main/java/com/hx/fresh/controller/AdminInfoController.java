@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hx.fresh.entity.AdminInfo;
 import com.hx.fresh.service.IAdminInfoService;
-import com.hx.fresh.utils.ResponseUtil;
+import com.hx.fresh.utils.RespUtil;
 
 @Controller
 @RequestMapping("/admin")
@@ -25,7 +25,7 @@ public class AdminInfoController {
 	public Map<String,Object> login(AdminInfo af,HttpSession session){
 		AdminInfo admin = adminService.login(af);
 		if(admin==null) {
-			return ResponseUtil.respMap(500, null, null);
+			return RespUtil.respMap(500, null, null);
 		}
 		session.setAttribute("currentLoginAdmin", admin);
 		//判断该账号是否已经在其他地方登录
@@ -33,7 +33,7 @@ public class AdminInfoController {
 //		if(wss != null) {
 //			wss.sendMessage("100");
 //		}
-		return ResponseUtil.respMap(200, null, null);
+		return RespUtil.respMap(200, null, null);
 	}
 	
 	/**
@@ -46,10 +46,10 @@ public class AdminInfoController {
 	public Map<String,Object> checkLogin(HttpSession session){
 		Object obj = session.getAttribute("currentLoginAdmin");
 		if(obj == null) {
-			return ResponseUtil.respMap(500, null, null);
+			return RespUtil.respMap(500, null, null);
 		}
 		AdminInfo af = (AdminInfo) obj;
-		return ResponseUtil.respMap(200, af.getAid(), af);
+		return RespUtil.respMap(200, af.getAid(), af);
 	}
 	
 	@RequestMapping

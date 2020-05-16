@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hx.fresh.entity.MenberInfo;
 import com.hx.fresh.service.IMenberInfoBiz;
 import com.hx.fresh.utils.ParamsUtil;
-import com.hx.fresh.utils.ResponseUtil;
+import com.hx.fresh.utils.RespUtil;
 import com.hx.fresh.utils.SendMailUtil;
 
 @RestController
@@ -43,22 +43,22 @@ public class MenberInfoController {
 	@RequestMapping("/login")		//参数必要
 	public Map<String,Object> login(@RequestParam Map<String,String> map,HttpSession session){
 		if(map.isEmpty() || ParamsUtil.checkNull(map.get("nickname"),map.get("pwd"),map.get("yzm"))){
-			return ResponseUtil.respMap(500, null, null);		//参数为空
+			return RespUtil.respMap(500, null, null);		//参数为空
 		}
 		
 		Object codeObj = session.getAttribute("vCode");
 		System.err.println(codeObj);
 		if(codeObj==null || !codeObj.toString().equals(map.get("yzm"))){
-			return ResponseUtil.respMap(501, null, null);		//验证码错误
+			return RespUtil.respMap(501, null, null);		//验证码错误
 		}
 		
 		MenberInfo menber = menberBiz.login(map);
 		if(menber != null){
 			session.removeAttribute("vCode");	//清除已使用的验证码
 			session.setAttribute("currentLoginUser", menber);
-			return ResponseUtil.respMap(200, null, menber);
+			return RespUtil.respMap(200, null, menber);
 		}
-		return ResponseUtil.respMap(503, null, null);	//没有查到，账号或密码错误
+		return RespUtil.respMap(503, null, null);	//没有查到，账号或密码错误
 	}
 
 	@RequestMapping("/reg")		//参数必要
@@ -96,8 +96,8 @@ public class MenberInfoController {
 			Timer timer = new Timer();
 			timer.schedule(task, 180000); 	//3分钟后执行
 			
-			return ResponseUtil.respMap(200, null, null);
+			return RespUtil.respMap(200, null, null);
 		}
-		return ResponseUtil.respMap(500, null, null);
+		return RespUtil.respMap(500, null, null);
 	}
 }

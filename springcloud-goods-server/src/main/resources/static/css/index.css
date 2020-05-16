@@ -17,8 +17,10 @@
 .welcome,.login_info,.login_btn,.user_link{
 	line-height:29px;
 }
-.login_info{
-	display:none;/*隐藏*/
+
+.login_info span{
+	color: #666 !important;
+	cursor: pointer;
 }
 .login_info em{
 	color:#ff8888;

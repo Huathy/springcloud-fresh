@@ -12,16 +12,18 @@
 <body>
 	<header id="header">
 		<!-- 头部  -->
-		<div class="header_con">
+		<div id="login_info">
+			<div class="header_con">
 			<div class="header">
 				<div class="welcome fl">欢迎来到天天生鲜</div>
 				<div class="fr">
 					<div class="login_info fl">
-						欢迎：<em>y c</em>
+						<span v-if="nickName != ''">欢迎：<em>{{nickName}}</em></span>
 					</div>
 					<div class="login_btn fl">
-						<a href="login.html">登录</a> <span> | </span> <a
-							href="register.html">注册</a>
+						<a v-if=" nickName == '' " href="../user/login.html">登录</a>
+						<span> | </span> 
+						<a href="../user/register.html">注册</a>
 					</div>
 					<div class="user_link fl">
 						<span> | </span> <a href="user.html">用户中心</a> <span> | </span> <a
@@ -29,6 +31,7 @@
 					</div>
 				</div>
 			</div>
+		</div>
 		</div>
 	</header>
 	<!-- 搜素框 -->
@@ -140,6 +143,7 @@
 	<script src="js/vue.min.js"></script>
 	<script src="js/axios.js"></script>
 	<script src="js/qs.js"></script>
+	<script src="js/check.js"></script>
 	<script>
 		let vm = new Vue({
 			el: '#goods_info' ,
