@@ -2,9 +2,10 @@ package com.hx.fresh.utils;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,6 +24,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ParamsUtil {
 	public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	public static Map<String, Object> pageParam(Integer page , Integer rows){
+		Map<String, Object> map = new HashMap<>();
+		map.put("page", (page-1) * rows);
+		map.put("rows", rows);
+		return map;
+	}
+	
+	public static Map<String, Object> pageParam(Map<String, Object> map){
+		int page = Integer.parseInt(String.valueOf(map.get("page")));
+		int rows = Integer.parseInt(String.valueOf(map.get("rows")));
+		map.put("page", (page-1) * rows);
+		map.put("rows", rows);
+		return map;
+	}
+	
 	/**
 	 * json数据转为对象
 	 * @param jsonData	json格式的数据

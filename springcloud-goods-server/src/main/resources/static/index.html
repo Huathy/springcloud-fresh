@@ -10,43 +10,43 @@
 </head>
 
 <body>
-	<header id="header">
+	<div id="login_info">
 		<!-- 头部  -->
-		<div id="login_info">
-			<div class="header_con">
+		<div class="header_con">
 			<div class="header">
 				<div class="welcome fl">欢迎来到天天生鲜</div>
 				<div class="fr">
 					<div class="login_info fl">
 						<span v-if="nickName != ''">欢迎：<em>{{nickName}}</em></span>
+						<!-- <em v-else>{{nickName}}</em>  -->
 					</div>
 					<div class="login_btn fl">
-						<a v-if=" nickName == '' " href="../user/login.html">登录</a>
-						<span> | </span> 
-						<a href="../user/register.html">注册</a>
+						<a v-if="nickName == ''" href="/user/login.html">登录</a> <span>
+							| </span> <a target="_blabk" href="/user/register.html">注册</a>
 					</div>
 					<div class="user_link fl">
-						<span> | </span> <a href="user.html">用户中心</a> <span> | </span> <a
-							href="cart.html">我的购物车</a> <span> | </span> <a href="order.html">我的订单</a>
+						<span> | </span><a href="user.html">用户中心</a> <span> | </span><a
+							href="front/cart.html">我的购物车</a> <span> | </span><a
+							href="order.html">我的订单</a>
 					</div>
 				</div>
 			</div>
 		</div>
-		</div>
-	</header>
-	<!-- 搜素框 -->
-	<div class="search_bar clearfix">
-		<a href="index.html" class="logo fl"><img src="images/logo.png"></a>
-		<div class="search_con fl">
-			<form>
-				<input type="text" class="input_text fl" name="key_words"
-					placeholder="搜索商品"> <input type="submit"
-					class="input_btn fr" value="搜索">
-			</form>
-		</div>
-		<div class="guest_cart fr">
-			<a href="cart.html" class="cart_name fl">我的购物车</a>
-			<div class="goods_count fl" id="show_count">1</div>
+
+		<!-- 搜素框 -->
+		<div class="search_bar clearfix">
+			<a href="index.html" class="logo fl"><img src="images/logo.png"></a>
+			<div class="search_con fl">
+				<form>
+					<input type="text" class="input_text fl" name="key_words"
+						placeholder="搜索商品"> <input type="submit"
+						class="input_btn fr" value="搜索">
+				</form>
+			</div>
+			<div class="guest_cart fr">
+				<a href="front/cart.html" class="cart_name fl">我的购物车</a>
+				<div class="goods_count fl" id="show_count">{{goodsCount}}</div>
+			</div>
 		</div>
 	</div>
 
@@ -102,10 +102,12 @@
 			<div class="list_title clearfix">
 				<h3 class="fl" id="model01">{{type.tname}}</h3>
 				<div class="subtitle fl">
-					<span>|</span> 
-					<a :href="'details.html#' + gd.gno + '&' + type.tname" v-for="gd in goods" v-if="gd.tno == type.tno" target="_blank">{{gd.gname}}</a>
+					<span>|</span> <a
+						:href="'details.html#' + gd.gno + '&' + type.tname"
+						v-for="gd in goods" v-if="gd.tno == type.tno" target="_blank">{{gd.gname}}</a>
 				</div>
-				<a :href=" 'goods.html#' + type.tno + '&' + type.tname " target="_blank" class="goods_more fr" id="fruit_more">查看更多</a>
+				<a :href=" 'goods.html#' + type.tno + '&' + type.tname "
+					target="_blank" class="goods_more fr" id="fruit_more">查看更多</a>
 			</div>
 
 			<div class="goods_con clearfix">
@@ -115,10 +117,11 @@
 				<ul class="goods_list fl">
 					<li v-for="gd in goods" v-if="gd.tno == type.tno">
 						<h4>
-							<a :href=" 'details.html#' + gd.gno + '&' + type.tname " target="_blank">{{gd.gname}}</a>
-						</h4> 
-						<a :href=" 'details.html#' + gd.gno + '&' + type.tname " target="_blank">
-						<img :src="'http://127.0.0.1:8080/fresh/' + gd.pics"></a>
+							<a :href=" 'details.html#' + gd.gno + '&' + type.tname "
+								target="_blank">{{gd.gname}}</a>
+						</h4> <a :href=" 'details.html#' + gd.gno + '&' + type.tname "
+						target="_blank"> <img
+							:src="'http://127.0.0.1:8080/fresh/' + gd.pics"></a>
 						<div class="prize">&yen; {{gd.price}}</div>
 					</li>
 				</ul>

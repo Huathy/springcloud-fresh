@@ -62,7 +62,6 @@ public class VerifyCodeController {
 
 		String code = getRandomCode();
 		session.setAttribute("vCode", code);
-		System.out.println(code);
 
 		// 创建验证码图片
 		BufferedImage image = getCodeImage(code, 70, 36);

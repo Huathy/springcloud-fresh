@@ -47,7 +47,6 @@ public class MenberInfoController {
 		}
 		
 		Object codeObj = session.getAttribute("vCode");
-		System.err.println(codeObj);
 		if(codeObj==null || !codeObj.toString().equals(map.get("yzm"))){
 			return RespUtil.respMap(501, null, null);		//验证码错误
 		}

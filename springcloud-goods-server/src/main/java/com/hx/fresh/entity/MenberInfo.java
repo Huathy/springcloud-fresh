@@ -30,7 +30,7 @@ public class MenberInfo implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "MenberInfo [mno=" + mno + ", nickName=" + nickName + ", realName=" + realName + ", pwd=" + pwd
+		return "MemberInfo [mno=" + mno + ", nickName=" + nickName + ", realName=" + realName + ", pwd=" + pwd
 				+ ", tel=" + tel + ", email=" + email + ", photo=" + photo + ", regDate=" + regDate + ", status="
 				+ status + "]";
 	}
