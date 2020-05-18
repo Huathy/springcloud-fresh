@@ -22,7 +22,7 @@ public class CartInfoController {
 	private ICartInfoService service;
 	
 	private MenberInfo getMemberInfo(HttpSession session) {
-		Object obj = session.getAttribute("loginMember");
+		Object obj = session.getAttribute("currentLoginUser");
 		if (obj == null) { // 说明没有登录
 			return null;
 		}

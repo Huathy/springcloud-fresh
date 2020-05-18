@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hx.fresh.mapper.IOrderInfoMapper">
+	<insert id="add" parameterType="OrderInfo" useGeneratedKeys="true" keyProperty="ono"  keyColumn="ono">
+		INSERT INTO orderinfo(odate,ano,status,price,invoice) VALUES(#{odate},#{ano},1,#{price},0) ON DUPLICATE KEY UPDATE odate=#{odate}
+	</insert>
+	
+	<update id="modifyStatusByOno" parameterType="Integer">
+		update orderinfo set status=#{status} where ono=#{ono}
+	</update>
+	
+	<select id="getUnhandleOrderNum" resultType="int">
+		SELECT COUNT(ono) FROM orderinfo WHERE `status`=2
+	</select>
+	
+	<select id="report" resultType="OrderInfo" parameterType="string">
+		SELECT ono,`status`,price FROM orderinfo WHERE date_format(odate,'%Y-%m-%d') BETWEEN #{begin} AND #{end}
+	</select>
+	
+	<select id="count" resultType="int">
+		SELECT COUNT(ono) FROM orderinfo
+	</select>
+	<select id="findAllByPage" parameterType="Integer" resultMap="orderInfo">
+		SELECT o.ono,odate,o.status,weight  ,ino,i.gno,nums,i.price ,gname ,CONCAT_WS(' ',province,city,area,addr) AS addr
+		FROM orderinfo o,orderiteminfo i,goodsinfo g,addrinfo a
+		WHERE o.ono=i.ono AND i.gno=g.gno AND o.ano=a.ano ORDER BY o.ono DESC LIMIT #{page},#{size}
+	</select>
+	
+	<!-- 根据会员编号查询订单详细信息，会员编号为空则查询所有***********开始*************** -->
+	<select id="getByMno" parameterType="Integer" resultMap="orderInfo">
+		SELECT o.ono,odate,o.status,weight,o.price AS totalPrice ,ino,i.gno,nums,i.price ,gname,pics,CONCAT_WS(' ',province,city,area,addr) AS addr
+		FROM orderinfo o,orderiteminfo i,goodsinfo g,addrinfo a
+		WHERE o.ono=i.ono AND i.gno=g.gno AND o.ano=a.ano AND a.mno=#{_parameter} ORDER BY o.ono DESC
+	</select>
+	
+	<resultMap type="OrderInfo" id="orderInfo" autoMapping="true">	<!-- 订单 -->
+		<id property="ono" column="ono"/>
+		<result property="price" column="totalPrice"/>
+		<collection property="orderItem" ofType="OrderItemInfo" resultMap="orderItem" />
+		<collection property="addrInfo" ofType="AddrInfo" resultMap="addrInfo" />
+	</resultMap>
+	
+	<resultMap type="AddrInfo" id="addrInfo">
+		<result property="addr" column="addr"/>
+	</resultMap>
+	
+	<resultMap type="OrderItemInfo" id="orderItem" autoMapping="true">	<!-- 订单详情 -->
+		<id property="ino" column="ino"/>
+		<collection property="goodsInfo" ofType="GoodsInfo" resultMap="goodsInfo" />
+	</resultMap>
+	
+	<resultMap type="GoodsInfo" id="goodsInfo" autoMapping="true">		<!-- 订单详情商品 -->
+		<result property="gname" column="gname"/>
+		<result property="pics" column="pics"/>
+	</resultMap>
+	<!-- 根据会员编号查询订单详细信息***********查询结束************* -->
+</mapper>

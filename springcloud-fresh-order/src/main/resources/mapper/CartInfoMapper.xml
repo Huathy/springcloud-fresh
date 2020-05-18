@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hx.fresh.mapper.ICartInfoMapper">
+
+	<update id="add" parameterType="CartInfo">
+		INSERT INTO cartinfo VALUES(0,#{mno},#{gno},#{num}) ON DUPLICATE KEY UPDATE num=num+#{num} 
+	</update>
+	
+	<select id="countByMno" resultType="Integer" parameterType="Integer">
+		SELECT COUNT(cno) FROM cartinfo WHERE mno = #{paramter}
+	</select>
+	
+	<select id="getCartGoodsByMno" parameterType="int" resultType="GoodsInfo">
+		SELECT g.gno,gname,pics,unit,weight,price,num FROM cartinfo c,goodsinfo g WHERE c.gno=g.gno AND mno=#{_paramter}
+	</select>
+	
+	<update id="updateByMnoGno" parameterType="CartInfo">
+		UPDATE cartInfo SET num=#{num} WHERE mno=#{mno} AND gno=#{gno}
+	</update>
+	
+	<delete id="delByMnoGno" parameterType="Integer">
+		DELETE FROM cartinfo WHERE mno=#{mno} AND gno=#{gno}
+	</delete>
+	
+	<delete id="delByMnoGnos" parameterType="Integer">
+		DELETE FROM cartinfo WHERE mno=#{mno} AND gno IN
+		<foreach collection="gnos" item="gno" open="(" close=")" separator=",">
+			#{gno}
+		</foreach>
+	</delete>
+</mapper>

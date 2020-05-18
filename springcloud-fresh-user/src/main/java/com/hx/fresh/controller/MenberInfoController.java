@@ -1,5 +1,6 @@
 package com.hx.fresh.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -7,11 +8,13 @@ import java.util.TimerTask;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hx.fresh.entity.MenberInfo;
+import com.hx.fresh.service.ICartInfoService;
 import com.hx.fresh.service.IMenberInfoBiz;
 import com.hx.fresh.utils.ParamsUtil;
 import com.hx.fresh.utils.RespUtil;
@@ -26,11 +29,33 @@ public class MenberInfoController {
 	@Autowired
 	private IMenberInfoBiz menberBiz;
 	
+
+	@Autowired
+	private ICartInfoService cartInfoService;
+	
 	@RequestMapping("loginOut")
 	public void loginOut(HttpSession session){
 		session.removeAttribute("currentLoginUser");
 	}
-
+	
+	/**
+	 * 校验用户是否登录
+	 * @param session
+	 * @return
+	 */
+	@GetMapping("/check")
+	public Map<String, Object> chcck(HttpSession session){
+		Object obj = session.getAttribute("currentLoginUser");
+		if (obj == null) {
+			return RespUtil.respMap(500, null, null);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("member", obj);
+		MenberInfo mf = (MenberInfo) obj;
+		map.put("carts", cartInfoService.findByMno(mf.getMno()));
+		return RespUtil.respMap(200, null, map);
+	}
+	
 	@RequestMapping("checkLogin")
 	public MenberInfo checkLogin(HttpSession session){
 		Object obj = session.getAttribute("currentLoginUser");

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hx.fresh.mapper.IGoodsInfoMapper">
+	<delete id="delByGno" parameterType="int">
+		DELETE FROM goodsinfo WHERE gno=#{_parameter}
+	</delete>
+	
+	<!-- SELECT gno,gname,price,weight,pics FROM goodsInfo g,goodstype t WHERE gname LIKE '%虾%' or tname LIKE '%海鲜%' AND g.tno=t.tno -->
+	<select id="countSearch" parameterType="list" resultType="int">
+		SELECT DISTINCT COUNT(gno) FROM goodsinfo g,goodstype t WHERE g.tno=t.tno AND  ( 
+		<foreach collection="list" item="item" open=" gname LIKE " separator="or gname LIKE">
+			CONCAT('%',#{item},'%') OR tname LIKE CONCAT('%',#{item},'%')		<!-- or intro like CONCAT('%',#{item},'%')  -->
+		</foreach>
+		)
+	</select>
+	<!-- SELECT * FROM goodsinfo WHERE gname LIKE '%柠檬%' or gname LIKE '%虾%' ORDER BY gno DESC -->
+	<select id="searchGoodsByPage" parameterType="Object" resultType="GoodsInfo">
+		SELECT DISTINCT gno,gname,price,weight,pics FROM goodsinfo g,goodstype t WHERE g.tno=t.tno AND  ( 
+		<foreach collection="kws" item="item" open=" gname LIKE " separator="or gname LIKE">
+			CONCAT('%',#{item},'%') OR tname LIKE CONCAT('%',#{item},'%')
+		</foreach>
+		) ORDER BY gno DESC LIMIT #{page},#{size} 
+	</select>
+	
+	<select id="getGoodsByGid" parameterType="Integer" resultType="GoodsInfo">
+		SELECT gno,gname,tno,price,intro,balance,pics,unit,qperied,weight,descr FROM goodsinfo WHERE gno = #{_parameter}
+	</select>
+	
+	<select id="getGoodsByTidPage" resultType="GoodsInfo">
+		SELECT gno,gname,price,weight,pics FROM goodsinfo WHERE tno=#{tno} ORDER BY gno DESC LIMIT #{page},#{pageSize} 
+	</select>
+	
+	<select id="getTidGoods" resultType="map">		<!-- 查询类别编号与商品信息，并按照类别编号分组，商品信息由RAND()随机查询并由:分割,商品信息根据&分割 -->
+		SELECT tno,substring_index(GROUP_CONCAT(gno,'||',gname,'||',price,'||',pics  ORDER BY RAND() DESC SEPARATOR ':') ,':',4)
+		 as gInfo FROM goodsinfo  GROUP BY tno ORDER BY tno
+	</select>
+	
+	<select id="count" resultType="int" parameterType="Integer">
+		SELECT COUNT(gno) FROM goodsinfo
+		<if test="tno!=null and !tno &lt;= 0">
+			WHERE tno = #{tno}
+		</if>
+	</select>
+	
+	<select id="findAllByPage" parameterType="Integer" resultType="GoodsInfo">
+		SELECT g.gno,gname,g.tno,tname,price,intro,balance,pics,unit,qperied,weight,descr FROM goodsinfo g INNER JOIN goodstype t ON g.tno=t.tno  ORDER BY g.gno LIMIT #{page},#{pageSize}
+	</select>
+	
+	<select id="getNewGoods" resultType="GoodsInfo">
+		SELECT g.gno,gname,g.tno,price,pics FROM goodsinfo g,goodstype t WHERE g.tno=t.tno  ORDER BY RAND() LIMIT 0,2
+	</select>
+	
+	<insert id="add" parameterType="GoodsInfo">
+		INSERT INTO goodsinfo VALUES(0,#{gname},#{tno},#{price},#{intro},#{balance},#{pics},#{unit},#{qperied},#{weight},#{descr})
+	</insert>
+
+<!-- UPDATE goodsinfo SET gno=1,gname='',tno=1,price=20,intro='柠檬精',balance=30,pics='[../freshPics/1585968955080_8668-goods001.jpg]',
+	unit='个',qperied='5天',weight='200g',descr='柠檬精,好酸好酸' WHERE gno=2 -->
+	<update id="modify" parameterType="GoodsInfo">
+		UPDATE goodsinfo SET gname=#{gname},tno=#{tno},price=#{price},intro=#{intro},balance=#{balance},
+		unit=#{unit},qperied=#{qperied},weight=#{weight},descr=#{descr}
+		<if test=" pics != null and pics.length>0 ">	<!-- 数据是string格式xxx.jpg|xxx.png -->
+			,pics=#{pics}
+		</if>
+		WHERE gno=#{gno}
+	</update>
+	
+	<update id="minusByGnos" parameterType="list">
+		UPDATE goodsinfo SET balance=CASE gno
+		<foreach collection="list" separator="," item="item">
+			when #{item.gno} then balance-#{item.nums}
+		</foreach>
+		END
+		<foreach collection="list" item="item" open="WHERE gno IN (" close=")" separator=",">
+			#{item.gno}
+		</foreach>
+	</update>
+</mapper>
